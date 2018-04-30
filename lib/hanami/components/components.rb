@@ -29,7 +29,12 @@ module Hanami
 
       resolve do |configuration|
         if configuration.logger.is_a?(Array)
+
+          klass = configuration.logger.first.class.name          
+
           if configuration.logger.first.is_a?(::Logger)
+            configuration.logger.first
+          elsif defined?(SemanticLogger::Loggable) && configuration.logger.first.is_a?(::SemanticLogger::Logger)
             configuration.logger.first
           else
             Hanami::Logger.new(Hanami.environment.project_name, *configuration.logger)
